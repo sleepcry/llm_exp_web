@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body style="background:#aaa;">
+    <div style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);padding:30px;background:#fefefe;">
+    <center><h1>欢迎来体验智能助教！ {{request.user}}</h1></center>
+    <center style="position:fixed;top:10px;right:30px;color:red;"> <a href = "{% url 'logout-user' %}">Logout</a></center>
+    <div style="margin-top:30px;">
+    <a href="/chat/{{request.user.username}}/">
+        <button>心理学专业助教</button>
+    </a>
+    </div>
+    <div style="margin-top:30px;">
+    <a href="/interview/{{request.user.username}}/">
+        <button>面试模拟</button>
+    </a>
+    </div>
+    <div style="margin-top:30px;">
+    <a href="#" style="pointer-events: none;">
+        <button>视频课程助教（未完成）</button>
+    </a>
+    </div>
+    </div>
+</body>
+</html>
+

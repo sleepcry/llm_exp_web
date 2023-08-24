@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <link href="{% static 'bootstrap-5.0.2-dist/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <script src="{% static 'bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js' %}" ></script>
+</head>
+<body>
+    <br>
+    {% if request.user.is_authenticated  %}
+    <center style="position:fixed;top:30px;right:30px;color:red;"> <a href = "{% url 'logout-user' %}">Logout</a></center>
+    {% endif %}
+    <div
+    class="chat__item__container"
+    id="id_chat_item_container"
+    style="font-size: 20px;padding:50px;"
+    >
+    <br />
+    <br />
+    <br />
+    {% if welcome %}
+    <div style='color:#aaa;font-size:0.7em;font-weight:bold;'>{{welcome}}</div>
+    {% endif %}
+    </div>
+    <div style="height:150px;"></div>
+    <div style="position:fixed;bottom:0px;width:100%;background:#fafafa;padding:20px;">
+        <div style="display:flex;flex-direction:row;align-items:center;">
+            <input type="text" style="width:400px;padding:5px 10px;" placeholder="输入问题，寻找答案" id="id_message_send_input" />
+            <button type="submit" style="margin-left:20px;" id="id_message_send_button">Send Message</button>
+            <button data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-left:20px;" >问题例子</button>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">问题例子</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="white-space: pre-wrap;padding:10px;overflow-y:scroll;height:80vh;">
+## 心理学问题
+什么是心理学的定义和范围？
+心理发展中的关键阶段有哪些，它们是如何影响个体的？
+学习理论中的经典条件反射和操作条件反射有什么区别？
+人类记忆是如何工作的？短期记忆和长期记忆有什么不同？
+什么是认知失调理论？它如何解释个体内部的冲突和不适？
+什么是心理疾病分类系统 DSM-5？它在临床诊断中的作用是什么？
+情绪和情感有什么区别？人类有哪些基本情绪？
+解释一下斯坦福监狱实验和米尔格拉姆的服从实验，它们对理解人类行为有何启示？
+什么是认知发展理论？讨论一下皮亚杰的认知发展阶段理论。
+人格心理学中的五大人格特质是什么？它们如何影响个体的行为和情感？
+解释一下社会认知理论，以及它在解释人们如何理解和预测其他人行为方面的作用。
+什么是心理治疗？列举几种常见的心理治疗方法。
+探讨一下压力的心理学影响，以及应对压力和应激的策略。
+什么是心理健康促进？提供一些提升心理健康的方法。
+解释一下自我概念和自尊，它们是如何影响个体的行为和情感的？
+人类社会中的群体动态和集体行为有哪些心理学解释？
+什么是认知失能？如何识别和帮助那些受到认知失能影响的个体？
+解释一下心理学中的条件学习和操作学习，以及它们在日常生活中的应用。
+什么是心理社会发展理论？讨论一下埃里克森的心理社会发展阶段理论。
+人类性别认同和性取向是如何形成的？心理学如何解释性别角色和性别偏见？
+
+## 其他学科问题
+什么是DNA的结构？
+如何种植番茄？
+蒸馏酒精的过程是什么样的？
+介绍一下巴黎的埃菲尔铁塔。
+哪些动物属于哺乳类？
+如何在计算机上安装操作系统？
+什么是永动机？
+解释一下人类的消化系统是如何工作的。
+如何进行基本的编程？
+著名的文艺复兴艺术家有哪些？
+什么是平衡食物？
+解释一下供求关系在经济学中的作用。
+如何绘制一个简单的风景画？
+介绍一下太阳系中的木星。
+什么是人工智能？
+如何更环保地生活？
+解释一下新冠病毒是如何传播的。
+世界上最高的山峰是什么？
+如何进行基本的汽车保养？
+介绍一下亚马逊雨林的生态多样性。
+
+## 个人问题
+你最喜欢的旅行地点是哪里？
+你的兴趣爱好是什么？
+你喜欢的书或电影是哪些？
+你平常的健身活动是什么？
+你最近学到的一项新技能是什么？
+你的家乡是哪里，对你来说有什么特别之处？
+你的职业是什么？喜欢这份工作吗？
+你最难忘的童年回忆是什么？
+你在空闲时间喜欢做什么？
+你的家庭成员有哪些？有兄弟姐妹吗？
+你的梦想是什么？未来有什么计划？
+你最喜欢的季节是什么？为什么？
+你喜欢的食物或菜肴是什么？
+你是否喜欢动物？有宠物吗？
+你有什么特别喜欢的音乐类型或歌手？
+你在学校或大学时的最难忘的课程是什么？
+你是否喜欢户外活动？比如徒步、露营等。
+你在朋友圈中扮演的角色是什么类型的？
+你喜欢的节日是什么？为什么？
+你是否参与过志愿者活动或慈善事业？
+
+
+## 闲聊问题
+你认为友善的社会是怎样的？
+如果你有一个自由的周末，你会选择怎么度过？
+你认为科技在日常生活中起到了什么作用？
+你对环保和可持续发展有什么看法？
+在你的国家，哪个节日是最重要的？
+你觉得笑是全球语言吗？为什么？
+你曾经有过的最大冒险是什么？
+你认为友情和爱情之间有哪些相似之处？
+如果可以改变世界的一件事，你会选择什么？
+你认为人们在社交媒体上展示的生活真实吗？
+你觉得文化和习俗对人的成长有何影响？
+你有没有什么特别喜欢的引导格言或座右铭？
+你认为艺术对社会有什么重要性？
+你觉得幸福的含义是什么？
+你认为人们对名人的过度崇拜有何影响？
+你觉得音乐对情绪有何影响？
+你认为人类是天生乐观还是悲观的？
+你认为教育的目标是什么？
+你怎么看待人工智能在未来可能扮演的角色？
+你觉得人们是否应该经常跳出自己的舒适区？为什么？
+      </div>
+    </div>
+  </div>
+</div>
+    <script>
+    var chatSocket = null;
+    var process = false
+    function openSocket(callback){
+        const chatSocket = new WebSocket("ws://" + window.location.host + '/ws/' + "{{mode}}/{{request.user.username}}/");
+        chatSocket.onopen = function (e) {
+            console.log("The connection was setup successfully !");
+            if(callback){
+                callback()
+            }
+        };
+        chatSocket.onerror = function(error) {
+            console.error(error);
+        }
+        chatSocket.onclose = function (e) {
+            console.log("Something unexpected happened !");
+        };
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            var div = document.createElement("div");
+            div.style.cssText  = "margin:10px;"
+            if(data.category == 'user'){
+                div.innerHTML = "<span style='color:blue;font-weight:bold;'>" + data.username + "</span> :    " + data.message;
+            }else if(data.category == 'ai'){
+                div.innerHTML = "<span style='color:#ff3377;font-weight:bold;'>" + data.username + "</span> :    " + data.message;
+            }else{ // hint
+                div.innerHTML = "<span style='color:#aaa;font-size:0.7em;font-weight:bold;'>" + data.message + "</span>";
+            }
+            if(data.category == 'system-done'){
+                process = false;
+                console.log("process false")
+            }
+            document.querySelector("#id_message_send_input").value = "";
+            document.querySelector("#id_chat_item_container").appendChild(div);
+        };
+        return chatSocket
+    }
+    document.querySelector("#id_message_send_input").focus();
+    document.querySelector("#id_message_send_input").onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            document.querySelector("#id_message_send_button").click();
+        }
+    };
+    document.querySelector("#id_message_send_button").onclick = function (e) {
+        var messageInput = document.querySelector("#id_message_send_input").value;
+        if(messageInput.trim().length == 0){
+            return
+        }
+        if (process ){
+            console.log("process true")
+            alert("请等待上个问题回答完成！")
+            return
+        }
+        if(chatSocket && chatSocket.readyState == 1){
+            process = true;
+            chatSocket.send(JSON.stringify({ message: messageInput, username : "{{request.user.username}}"}));
+        }else if(!chatSocket || chatSocket.readyState == 3){
+            chatSocket = openSocket(res=>{
+                process = true;
+                chatSocket.send(JSON.stringify({ message: messageInput, username : "{{request.user.username}}"}));
+            })
+        }
+    };
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <link href="{% static 'bootstrap-5.0.2-dist/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <script src="{% static 'bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js' %}" ></script>
+</head>
+<body>
+    <br>
+    {% if request.user.is_authenticated  %}
+    <center style="position:fixed;top:30px;right:30px;color:red;"> <a href = "{% url 'logout-user' %}">Logout</a></center>
+    {% endif %}
+    <div
+    class="chat__item__container"
+    id="id_chat_item_container"
+    style="font-size: 20px;padding:10px 50px; margin-top:120px;"
+    >
+    <br />
+    <br />
+    <br />
+    {% if welcome %}
+    <div style='color:#aaa;font-size:0.7em;font-weight:bold;'>{{welcome}}</div>
+    {% endif %}
+    </div>
+    <div style="height:300px;"></div>
+    <div style="position:fixed;top:0px;width:100%;background:#fafafa;padding:20px;">
+        <div style="display:flex;flex-direction:row;align-items:center;">
+            <div>公司性质：</div>
+            <input type="text" style="margin-left:20px;width:150px;padding:5px 10px;" value="互联网公司" id="company" />
+            <div style="margin-left:20px;">岗位性质：</div>
+            <input type="text" style="margin-left:20px;width:150px;padding:5px 10px;" value="Java工程师" id="job"/>
+            <button type="submit" style="margin-left:20px;" onclick="changeJob()">确定</button>
+        </div>
+    </div>
+    <div style="position:fixed;bottom:0px;width:100%;background:#fafafa;padding:20px;">
+        <div style="display:flex;flex-direction:row;align-items:start;">
+            <textarea type="text" style="width:80vw;height:200px;padding:5px 10px;" placeholder="你的回答" id="id_message_send_input" ></textarea>
+            <button type="submit" style="margin-left:20px;" id="id_message_send_button">提交</button>
+        </div>
+    </div>
+    <script>
+    var chatSocket = null;
+    var process = false
+    function openSocket(callback){
+        const chatSocket = new WebSocket("ws://" + window.location.host + '/ws/' + "{{mode}}/{{request.user.username}}/");
+        chatSocket.onopen = function (e) {
+            console.log("The connection was setup successfully !");
+            if(callback){
+                callback()
+            }
+        };
+        chatSocket.onerror = function(error) {
+            console.error(error);
+        }
+        chatSocket.onclose = function (e) {
+            console.log("Something unexpected happened !");
+        };
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log("onmessage:",data)
+            var div = document.createElement("div");
+            div.style.cssText  = "margin:10px;"
+            if(data.category == 'user'){
+                div.innerHTML = "<span style='color:blue;font-weight:bold;'>" + data.username + "</span> :    " + data.message;
+            }else if(data.category == 'ai'){
+                div.innerHTML = "<span style='color:#ff3377;font-weight:bold;'>" + data.username + "</span> :    " + data.message;
+            }else{ // hint
+                div.innerHTML = "<span style='color:#aaa;font-size:0.7em;font-weight:bold;'>" + data.message + "</span>";
+            }
+            if(data.category == 'system-done'){
+                process = false;
+                console.log("process false")
+            }
+            document.querySelector("#id_message_send_input").value = "";
+            document.querySelector("#id_chat_item_container").appendChild(div);
+        };
+        return chatSocket
+    }
+    document.querySelector("#id_message_send_input").focus();
+    document.querySelector("#id_message_send_button").onclick = function (e) {
+        var messageInput = document.querySelector("#id_message_send_input").value;
+        if(messageInput.trim().length == 0){
+            return
+        }
+        if (process ){
+            console.log("process true")
+            alert("请等待上个问题回答完成！")
+            return
+        }
+        if(chatSocket && chatSocket.readyState == 1){
+            process = true;
+            chatSocket.send(JSON.stringify({ message: messageInput, username : "{{request.user.username}}"}));
+        }else if(!chatSocket || chatSocket.readyState == 3){
+            chatSocket = openSocket(res=>{
+                process = true;
+                chatSocket.send(JSON.stringify({ message: messageInput, username : "{{request.user.username}}"}));
+            })
+        }
+    };
+    var company = ""
+    var job = "工程师"
+    function changeJob(){
+        company = document.querySelector("#company").value;
+        job = document.querySelector("#job").value;
+        if(chatSocket){
+            chatSocket.close()
+        }
+        chatSocket = openSocket(res=>{
+            chatSocket.send(JSON.stringify({ company: company,job:job, category: "init"}));
+        })
+    }
+    </script>
+</body>
+</html>
+
